@@ -1,12 +1,12 @@
 package model;
 
-public class TimeIntervalModel {
+public class TimeInterval {
     private String pickUpTime;
     private String pickUpDate;
     private String dropOffTime;
     private String dropOffDate;
 
-    public TimeIntervalModel(String pickUpTime, String pickUpDate, String dropOffTime, String dropOffDate) {
+    public TimeInterval(String pickUpTime, String pickUpDate, String dropOffTime, String dropOffDate) {
         this.pickUpTime = pickUpTime;
         this.pickUpDate = pickUpDate;
         this.dropOffTime = dropOffTime;

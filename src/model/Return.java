@@ -1,6 +1,6 @@
 package model;
 
-public class ReturnsModel {
+public class Return {
     private final int rid;
     private final String date;
     private final String time;
@@ -8,7 +8,7 @@ public class ReturnsModel {
     private boolean fulltank;
     private int value;
 
-    public ReturnsModel(int rid, String date, String time, String odometer, boolean fulltank, int value) {
+    public Return(int rid, String date, String time, String odometer, boolean fulltank, int value) {
         this.rid = rid;
         this.date = date;
         this.time = time;

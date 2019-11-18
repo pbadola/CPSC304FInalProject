@@ -8,39 +8,36 @@ public class DatabaseConnectionHandler {
     private static final String EXCEPTION_TAG = "[EXCEPTION]";
     private static final String WARNING_TAG = "[WARNING]";
 
-    private Connection connection = null;
+    private static Connection connection = null;
 
-
-    public DatabaseConnectionHandler() {
+    public static Connection getConnection() {
         try {
-            // Load the Oracle JDBC driver
-            // Note that the path could change for new drivers
-            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        }
-    }
-
-    public void close() {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        }
-    }
-
-    public boolean login(String username, String password) {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-
-            connection = DriverManager.getConnection(ORACLE_URL, username, password);
+            connection = DriverManager.getConnection(ORACLE_URL, "ora_pbadola", "a11704160");
             connection.setAutoCommit(false);
+            return connection;
+        } catch (SQLException e) {
+            System.out.println("Error getting the connection");
+            return null;
+        }
+    }
 
-            System.out.println("\nConnected to Oracle!");
+
+    public static void close() {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+    }
+
+    public static boolean login() {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+            DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             return true;
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
@@ -48,9 +45,11 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    private void rollbackConnection() {
+    public static void rollbackConnection() {
         try  {
-            connection.rollback();
+            if (connection != null) {
+                connection.rollback();
+            }
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }

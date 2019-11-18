@@ -1,5 +1,5 @@
 package model;
 
-public class RentalsModel {
+public class Rental {
  // come back to this when we know whats needed
 }

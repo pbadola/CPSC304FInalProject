@@ -1,10 +1,12 @@
 package controller;
 
-import model.TimeIntervalModel;
+import model.TimeInterval;
 
-public class Rental {
+public class RentalsController {
 
-    public void makeReservation(String location, String vehicleType, TimeIntervalModel intervalMode) {
+
+
+    public void makeReservation(String location, String vehicleType, TimeInterval intervalMode) {
         /* if there is a vehicle of requested type, system asks customer for additional options +
             estimation of cost
          */

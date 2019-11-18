@@ -1,6 +1,6 @@
 package model;
 
-public class ReservationsModel {
+public class Reservation {
     // confNo is primary key
     private final int confNo;
     private final String vtname;
@@ -10,7 +10,7 @@ public class ReservationsModel {
     private final String toDate;
     private final String toTime;
 
-    public ReservationsModel(int confNo, String vtname, int cellphone, String fromDate, String fromTime, String toDate, String toTime) {
+    public Reservation(int confNo, String vtname, int cellphone, String fromDate, String fromTime, String toDate, String toTime) {
         this.confNo = confNo;
         this.vtname = vtname;
         this.cellphone = cellphone;

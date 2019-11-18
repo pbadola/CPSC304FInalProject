@@ -1,14 +1,16 @@
 package model;
 
-public class CustomersModel {
+
+public class Customer {
     // dlicense is primary key
 
     private final int cellphone;
     private final String name;
     private final String address;
-    private final int dlicense;
+    private final String dlicense;
 
-    public CustomersModel(int cellphone, String name, String address, int dlicense) {
+
+    public Customer(int cellphone, String name, String address, String dlicense) {
         this.cellphone = cellphone;
         this.name = name;
         this.address = address;
@@ -26,7 +28,14 @@ public class CustomersModel {
     public String getAddress() {
         return address;
     }
-    public int getDlicense() {
+    public String getDlicense() {
         return dlicense;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Customer [dlicense=%s, cellphone=%d, name=%s, address=%s]",
+                dlicense, cellphone, name, address);
     }
 }
