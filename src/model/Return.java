@@ -2,42 +2,55 @@ package model;
 
 public class Return {
     private final int rid;
-    private final String date;
-    private final String time;
-    private final String odometer;
-    private boolean fulltank;
-    private int value;
+    private final String rdate;
+    private final String rtime;
+    private final int odometer;
+    private final int fulltank;
+    private float rvalue;
 
-    public Return(int rid, String date, String time, String odometer, boolean fulltank, int value) {
+    public Return(int rid, String date, String time, int odometer, int fulltank, float value) {
         this.rid = rid;
-        this.date = date;
-        this.time = time;
+        this.rdate = date;
+        this.rtime = time;
         this.odometer = odometer;
         this.fulltank = fulltank;
-        this.value = value;
+        this.rvalue = value;
     }
 
     public int getRid() {
         return rid;
     }
 
-    public String getDate() {
-        return date;
+    public String getRdate() {
+        return rdate;
     }
 
-    public String getTime() {
-        return time;
+    public String getRtime() {
+        return rtime;
     }
 
-    public String getOdometer() {
+    public int getOdometer() {
         return odometer;
     }
 
-    public boolean isFulltank() {
+    public int isFulltank() {
         return fulltank;
     }
 
-    public int getValue() {
-        return value;
+    public float getRvalue() {
+        return rvalue;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Return: \n"
+                        + "* rid = %d\n"
+                        + "* rdate = %s\n"
+                        + "* rtime = %s\n"
+                        + "* odometer = %d\n"
+                        + "* fulltank = %d\n"
+                        + "* rvalue = %.2f\n",
+                rid, rdate, rtime, odometer, fulltank, rvalue);
     }
 }

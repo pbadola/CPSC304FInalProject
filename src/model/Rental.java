@@ -78,4 +78,24 @@ public class Rental {
     public int getConfNo() {
         return confNo;
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Rental: \n"
+                + "* rid = %d\n"
+                + "* vlicense = %s\n"
+                + "* dlicense = %s\n"
+                + "* fromDate = %s\n"
+                + "* fromTime = %s\n"
+                + "* toDate = %s\n"
+                + "* toTime = %s\n"
+                + "* odometer = %d\n"
+                + "* cardName = %s\n"
+                + "* cardNo = %d\n"
+                + "* expDate = %s\n"
+                + "* confNo = %d",
+                rid, vlicense, dlicense, fromDate, fromTime, toDate, toTime, odometer, cardName, cardNo, expDate, confNo);
+
+    }
 }

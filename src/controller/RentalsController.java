@@ -1,11 +1,10 @@
 package controller;
 
 import model.Rental;
-import model.TimeInterval;
 import database.DatabaseConnectionHandler;
-//import javafx.scene.control.CustomMenuItem;
-import model.Customer;
 import java.sql.*;
+import java.util.ArrayList;
+
 public class RentalsController {
 
     public static void addRental(Rental rental) {
@@ -54,7 +53,7 @@ public class RentalsController {
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return;
-            ps = connection.prepareStatement("DELETE FROM Customer WHERE rid = ?");
+            ps = connection.prepareStatement("DELETE FROM Rentals WHERE rid = ?");
             ps.setInt(1, rid);
 
             int rowCount = ps.executeUpdate();
@@ -87,7 +86,7 @@ public class RentalsController {
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return null;
-            ps = connection.prepareStatement("SELECT * FROM Customer WHERE rid=?");
+            ps = connection.prepareStatement("SELECT * FROM Rentals WHERE rid=?");
             ps.setInt(1, rid);
 
             rs = ps.executeQuery();
@@ -118,5 +117,55 @@ public class RentalsController {
         return retRental;
     }
 
+    public static ArrayList<Rental> getDailyRental(String date, String location, String city) {
+        Connection connection;
+        ArrayList<Rental> retRental = new ArrayList<Rental>();
+        Rental rental = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
+        //TODO: This query is incorrect. It does not do what is expected
+        String query = "SELECT * ";
+        if (location != null && city != null){
+            query = query + "FROM Rentals R, Vehicles V "+
+                    "WHERE R.fromDate =  " + date + " AND R.vlicense = V.vlicence AND V.city = " + city +
+                    " AND V.location = " + location;
+        }
+        else {
+            query = query + "FROM Rentals WHERE fromDate=" + date;
+        }
+
+        try {
+            connection = DatabaseConnectionHandler.getConnection();
+            if (connection == null) return null;
+            ps = connection.prepareStatement(query);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                rental = new Rental(rs.getInt("rid"), rs.getString("vlicense"),
+                        rs.getString("dlicense"), rs.getString("fromDate"), rs.getString("fromTime"),
+                        rs.getString("toDate"), rs.getString("toTime"), rs.getInt("odometer"),
+                        rs.getString("cardName"), rs.getInt("cardNo"), rs.getString("expDate"),
+                        rs.getInt("confNo"));
+                retRental.add(rental);
+            }
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            DatabaseConnectionHandler.rollbackConnection();
+        }
+        finally {
+            DatabaseConnectionHandler.close();
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) { System.out.println(e.getMessage()); }
+        }
+
+        return retRental;
+    }
 }
