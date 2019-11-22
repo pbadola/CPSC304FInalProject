@@ -1,23 +1,26 @@
 package model;
 
+import java.util.Random;
+
 public class Reservation {
     // confNo is primary key
-    private final int confNo;
+    private int confNo;
     private final String vtname;
-    private final int cellphone;
-    private final String fromDate;
-    private final String fromTime;
-    private final String toDate;
-    private final String toTime;
+    private final String dlicense;
+    private final String pickUpTime;
+    private final String pickUpDate;
+    private final String dropOffTime;
+    private final String dropOffDate;
 
-    public Reservation(int confNo, String vtname, int cellphone, String fromDate, String fromTime, String toDate, String toTime) {
+    public Reservation(int confNo, String vtname, String dlicense, String pickUpTime, String pickUpDate, String dropOffTime,
+                       String dropOffDate) {
         this.confNo = confNo;
         this.vtname = vtname;
-        this.cellphone = cellphone;
-        this.fromDate = fromDate;
-        this.fromTime = fromTime;
-        this.toDate = toDate;
-        this.toTime = toTime;
+        this.dlicense = dlicense;
+        this.pickUpTime = pickUpTime;
+        this.pickUpDate = pickUpDate;
+        this.dropOffTime = dropOffTime;
+        this.dropOffDate = dropOffDate;
     }
 
     public int getConfNo() {
@@ -28,23 +31,35 @@ public class Reservation {
         return vtname;
     }
 
-    public int getCellphone() {
-        return cellphone;
+    public String getDlicense() {
+        return dlicense;
     }
 
-    public String getFromDate() {
-        return fromDate;
+    public String getPickUpTime() {
+        return pickUpTime;
     }
 
-    public String getFromTime() {
-        return fromTime;
+    public String getPickUpDate() {
+        return pickUpDate;
     }
 
-    public String getToDate() {
-        return toDate;
+    public String getDropOffTime() {
+        return dropOffTime;
     }
 
-    public String getToTime() {
-        return toTime;
+    public String getDropOffDate() {
+        return dropOffDate;
+    }
+
+    public void setConfNo(int confNo) {
+        this.confNo = confNo;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Reservation [confNo=%d, vtname=%s, dlicense=%s, fromDate=%s, fromTime=%s," +
+                        "toDate=%s, toTime=%s]",
+                confNo, vtname, dlicense, pickUpDate, pickUpTime, dropOffDate, dropOffTime);
     }
 }

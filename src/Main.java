@@ -2,16 +2,14 @@ import java.sql.*;
 import database.DatabaseConnectionHandler;
 import controller.CustomersController;
 import model.Customer;
+import model.Reservation;
+import controller.ReservationsController;
 
 public class Main {
     private static DatabaseConnectionHandler db = null;
 
     public static void main(String[] args) {
         DatabaseConnectionHandler.login();
-
-        CustomersController.deleteCustomer("1234567");
-        CustomersController.deleteCustomer("1234568");
-        CustomersController.deleteCustomer("5634563");
 
         Customer c1 = new Customer(356345634, "Patrishka Badola", "Dumpster", "1234567");
         CustomersController.addCustomer(c1);
@@ -27,6 +25,17 @@ public class Main {
         CustomersController.deleteCustomer("1234568");
         Customer test3 = CustomersController.getCustomer("1234568");
         System.out.println(test3);
+
+        Reservation r1 = new Reservation(-1, "Economy", "1234567", "1",
+                "M", "1", "f");
+
+        int i = ReservationsController.makeReservation(r1);
+        Reservation rtest = ReservationsController.getReservation(i);
+        System.out.println(rtest);
+        ReservationsController.deleteReservation(i);
+        Reservation rtest2 = ReservationsController.getReservation(i);
+        System.out.println(rtest2);
+
 
     }
 }

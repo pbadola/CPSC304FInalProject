@@ -14,7 +14,7 @@ public class CustomersController {
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return;
-            ps = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?,?)");
+            ps = connection.prepareStatement("INSERT INTO Customers VALUES (?,?,?,?)");
             ps.setString(1, customer.getDlicense());
             ps.setInt(2, customer.getCellphone());
             ps.setString(3, customer.getName());
@@ -45,7 +45,7 @@ public class CustomersController {
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return;
-            ps = connection.prepareStatement("DELETE FROM Customer WHERE dlicense = ?");
+            ps = connection.prepareStatement("DELETE FROM Customers WHERE dlicense = ?");
             ps.setString(1, dlicense);
 
             int rowCount = ps.executeUpdate();
@@ -78,7 +78,7 @@ public class CustomersController {
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return null;
-            ps = connection.prepareStatement("SELECT * FROM Customer WHERE dlicense=?");
+            ps = connection.prepareStatement("SELECT * FROM Customers WHERE dlicense=?");
             ps.setString(1, dlicense);
 
             rs = ps.executeQuery();
