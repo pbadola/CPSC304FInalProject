@@ -21,7 +21,7 @@ public class VehiclesController {
     try {
       connection = DatabaseConnectionHandler.getConnection();
       if (connection == null) return;
-      ps = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?,?,?,?,?,?,?,?)");
+      ps = connection.prepareStatement("INSERT INTO Vehicles VALUES (?,?,?,?,?,?,?,?,?,?)");
       ps.setString(1, vehicle.getVlicense());
       ps.setString(2, vehicle.getMake());
       ps.setString(3, vehicle.getModel());
@@ -31,7 +31,7 @@ public class VehiclesController {
       ps.setString(7, vehicle.getStatus());
       ps.setString(8, vehicle.getVtname());
       ps.setString(9, vehicle.getLocation());
-      ps.setString(10, vehicle.getLocation());
+      ps.setString(10, vehicle.getCity());
 
       ps.executeUpdate();
       connection.commit();
@@ -132,9 +132,9 @@ public class VehiclesController {
     return retVehicle;
   }
 
-  // TODO: what about city?
   // TODO: time intervals????????????
-  public static ArrayList<Vehicle> getAvailableVehicles(String vtname, String location) {
+  public static ArrayList<Vehicle> getAvailableVehicles(
+      String vtname, String location, String city) {
     Connection connection;
     ArrayList<Vehicle> retVehicles = new ArrayList<>();
     PreparedStatement ps = null;
@@ -142,10 +142,10 @@ public class VehiclesController {
 
     String query = "SELECT * FROM Vehicles WHERE status = 'Available'";
     if (vtname != null) {
-      query += " AND vtname = " + vtname;
+      query += String.format(" AND vtname = '%s'", vtname);
     }
-    if (location != null) {
-      query += " AND location = " + location;
+    if (location != null && city != null) {
+      query += String.format(" AND location = '%s' AND city = '%s'", location, city);
     }
     // TODO: what should we sort by?
     query += " ORDER BY year desc";
