@@ -30,7 +30,7 @@ public class MainWindow extends JFrame implements ActionListener {
     public void showFrame() {
 
         available_vehicles = new JButton("View Available Vehicles");
-        reservation = new JButton("Reservation a Vehicle");
+        reservation = new JButton("Reserve a Vehicle");
         rent = new JButton("Rent a Vehicle");
         vehicle_return = new JButton("Return Vehicle");
         reports = new JButton("Reports");
