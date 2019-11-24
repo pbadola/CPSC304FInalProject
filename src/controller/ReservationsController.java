@@ -22,7 +22,7 @@ public class ReservationsController {
       connection = DatabaseConnectionHandler.getConnection();
       System.out.println("after get connection");
       if (connection == null) return 0;
-      ps = connection.prepareStatement("INSERT INTO Reservations VALUES (?,?,?,?,?)");
+      ps = connection.prepareStatement("INSERT INTO Reservations VALUES (?,?,?,?,?,?,?)");
       System.out.println("after sql statement");
       System.out.println(reservation.getConfNo());
       ps.setInt(1, reservation.getConfNo());
@@ -30,6 +30,8 @@ public class ReservationsController {
       ps.setString(3, reservation.getDlicense());
       ps.setTimestamp(4, reservation.getFromDateTime());
       ps.setTimestamp(5, reservation.getToDateTime());
+      ps.setString(6, reservation.getLocation());
+      ps.setString(7, reservation.getCity());
       System.out.println("after all values added");
 
       ps.executeUpdate();
@@ -111,7 +113,9 @@ public class ReservationsController {
                 rs.getString("vtname"),
                 rs.getString("dlicense"),
                 rs.getTimestamp("fromDateTime"),
-                rs.getTimestamp("toDateTime"));
+                rs.getTimestamp("toDateTime"),
+                rs.getString("location"),
+                rs.getString("city"));
       }
       //   System.out.println(retReservation.getConfNo());
     } catch (SQLException e) {

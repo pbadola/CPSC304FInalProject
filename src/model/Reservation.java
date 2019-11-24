@@ -8,14 +8,24 @@ public class Reservation {
   private final String dlicense;
   private final Timestamp fromDateTime;
   private final Timestamp toDateTime;
+  private final String location;
+  private final String city;
 
   public Reservation(
-      int confNo, String vtname, String dlicense, Timestamp fromDateTime, Timestamp toDateTime) {
+      int confNo,
+      String vtname,
+      String dlicense,
+      Timestamp fromDateTime,
+      Timestamp toDateTime,
+      String location,
+      String city) {
     this.confNo = confNo;
     this.vtname = vtname;
     this.dlicense = dlicense;
     this.fromDateTime = fromDateTime;
     this.toDateTime = toDateTime;
+    this.location = location;
+    this.city = city;
   }
 
   public int getConfNo() {
@@ -38,6 +48,14 @@ public class Reservation {
     return toDateTime;
   }
 
+  public String getLocation() {
+    return location;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
   public void setConfNo(int confNo) {
     this.confNo = confNo;
   }
@@ -45,7 +63,7 @@ public class Reservation {
   @Override
   public String toString() {
     return String.format(
-        "Reservation [confNo=%d, vtname=%s, dlicense=%s, fromDateTime=%s, toDateTime=%s]",
-        confNo, vtname, dlicense, fromDateTime, toDateTime);
+        "Reservation [confNo=%d, vtname=%s, dlicense=%s, fromDateTime=%s, toDateTime=%s, location=%s, city=%s]",
+        confNo, vtname, dlicense, fromDateTime, toDateTime, location, city);
   }
 }
