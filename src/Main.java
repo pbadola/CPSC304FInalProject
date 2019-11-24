@@ -1,9 +1,6 @@
 import database.DatabaseConnectionHandler;
 import model.VehicleType;
-import tests.CustomersTest;
-import tests.ReservationsTest;
-import tests.VehicleTypesTest;
-import tests.VehiclesTest;
+import tests.*;
 
 public class Main {
   private static DatabaseConnectionHandler db = null;
@@ -14,6 +11,7 @@ public class Main {
 //    VehiclesTest.test();
 //    CustomersTest.test();
 //    ReservationsTest.test();
-    VehicleTypesTest.test();
+   // VehicleTypesTest.test();
+    RentalsTest.test();
   }
 }

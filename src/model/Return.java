@@ -6,9 +6,9 @@ public class Return {
     private final String rtime;
     private final int odometer;
     private final int fulltank;
-    private float rvalue;
+    private double rvalue;
 
-    public Return(int rid, String date, String time, int odometer, int fulltank, float value) {
+    public Return(int rid, String date, String time, int odometer, int fulltank, double value) {
         this.rid = rid;
         this.rdate = date;
         this.rtime = time;
@@ -37,8 +37,12 @@ public class Return {
         return fulltank;
     }
 
-    public float getRvalue() {
+    public double getRvalue() {
         return rvalue;
+    }
+
+    public void setValue(double value){
+        rvalue = value;
     }
 
     @Override

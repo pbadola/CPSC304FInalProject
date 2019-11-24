@@ -11,12 +11,12 @@ public class Rental {
     private final String toDate;
     private final int odometer;
     private final String cardName;
-    private final int cardNo;
+    private final String cardNo;
     private final String expDate;
     private final int confNo;
 
     public Rental(int rid, String vlicense, String dlicense, String fromDate, String fromTime, String toDate,
-                  String toTime, int odometer, String cardName, int cardNo, String expDate, int confNo){
+                  String toTime, int odometer, String cardName, String cardNo, String expDate, int confNo){
         this.rid = rid;
         this.vlicense = vlicense;
         this.dlicense = dlicense;
@@ -51,7 +51,7 @@ public class Rental {
         return cardName;
     }
 
-    public int getCardNo() {
+    public String getCardNo() {
         return cardNo;
     }
 
@@ -92,7 +92,7 @@ public class Rental {
                 + "* toTime = %s\n"
                 + "* odometer = %d\n"
                 + "* cardName = %s\n"
-                + "* cardNo = %d\n"
+                + "* cardNo = %s\n"
                 + "* expDate = %s\n"
                 + "* confNo = %d",
                 rid, vlicense, dlicense, fromDate, fromTime, toDate, toTime, odometer, cardName, cardNo, expDate, confNo);

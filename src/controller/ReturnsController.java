@@ -1,9 +1,10 @@
 package controller;
 import database.DatabaseConnectionHandler;
 import model.Return;
-//import javafx.scene.control.CustomMenuItem;
+import model.VehicleType;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ReturnsController {
     public static void addReturn(Return vReturn) {
@@ -19,7 +20,7 @@ public class ReturnsController {
             ps.setString(3, vReturn.getRtime());
             ps.setInt(4, vReturn.getOdometer());
             ps.setInt(5, vReturn.isFulltank());
-            ps.setFloat(6, vReturn.getRvalue());
+            ps.setDouble(6, vReturn.getRvalue());
 
 
 
@@ -87,7 +88,7 @@ public class ReturnsController {
             while (rs.next()) {
                 retReturn = new Return(rs.getInt("rid"), rs.getString("rdate"),
                         rs.getString("rtime"), rs.getInt("odometer"),
-                        rs.getInt("fulltank"), rs.getFloat("rvalue"));
+                        rs.getInt("fulltank"), rs.getDouble("rvalue"));
             }
         }
         catch(SQLException e) {
@@ -136,7 +137,7 @@ public class ReturnsController {
             while (rs.next()) {
                 rReturn = new Return(rs.getInt("rid"), rs.getString("rdate"),
                         rs.getString("rtime"), rs.getInt("odometer"),
-                        rs.getInt("fulltank"), rs.getFloat("rvalue"));
+                        rs.getInt("fulltank"), rs.getDouble("rvalue"));
                 retReturn.add(rReturn);
             }
         }
@@ -159,7 +160,21 @@ public class ReturnsController {
         return retReturn;
     }
 
-    public int calculateValue(){
+    public static int calculateValue(Date fromDate, Date toDate, String vtname){
+        VehicleType vt = VehicleTypesController.getVehicleType(vtname);
+        double weeklyRate = vt.getWrate();
+        double dailyRate = vt.getDrate();
+        double hourlyRate = vt.getHrate();
+        double weeklyIns = vt.getWirate();
+        double dailyIns = vt.getDirate();
+        double hourlyIns = vt.getHirate();
+
+        //TODO: find out how Date and time are dealt with
+        //int totalTime = toDate.getTime() - fromDate.getTime();
+        //int weeks =
+        //int days =
+        //int hours =
+        //totalCost = (weeks * (weeklyRate + weeklyIns)) + (days * (dailyRate + dailyIns)) +  (hours * (hourlyRate + hourlyIns));
         return 0;
     }
 }

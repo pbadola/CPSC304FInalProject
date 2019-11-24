@@ -5,7 +5,7 @@ import model.Reservation;
 
 public class ReservationsTest {
   public static void test() {
-    Reservation r1 = new Reservation(-1, "Economy", "1234567", "1", "M", "1", "f");
+    Reservation r1 = new Reservation(-1, "Economy", "1234567", "1", "M", "1", "f", "la","lo");
 
     int i = ReservationsController.makeReservation(r1);
     Reservation rtest = ReservationsController.getReservation(i);
