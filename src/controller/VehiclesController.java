@@ -3,10 +3,8 @@ package controller;
 import database.DatabaseConnectionHandler;
 import model.Vehicle;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 // TODO: Validation and error handling
@@ -132,23 +130,50 @@ public class VehiclesController {
     return retVehicle;
   }
 
-  // TODO: time intervals????????????
   public static ArrayList<Vehicle> getAvailableVehicles(
-      String vtname, String location, String city) {
+      String vtname, String location, String city, Timestamp fromDateTime, Timestamp toDateTime) {
     Connection connection;
     ArrayList<Vehicle> retVehicles = new ArrayList<>();
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    String query = "SELECT * FROM Vehicles WHERE status = 'Available'";
-    if (vtname != null) {
-      query += String.format(" AND vtname = '%s'", vtname);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    String query = "SELECT * FROM Vehicles V";
+
+    if (fromDateTime != null && toDateTime != null) {
+      query +=
+          String.format(
+              " WHERE NOT EXISTS "
+                  + "(SELECT 1 FROM Rentals R "
+                  + "WHERE V.vlicense = R.vlicense "
+                  + "AND (TO_DATE('%s', 'yyyy-mm-dd hh24:mi:ss') BETWEEN R.fromDateTime AND R.toDateTime "
+                  + "OR TO_DATE('%s', 'yyyy-mm-dd hh24:mi:ss') BETWEEN R.fromDateTime AND R.toDateTime OR "
+                  + "(TO_DATE('%s', 'yyyy-mm-dd hh24:mi:ss') <= R.fromDateTime AND TO_DATE('%s', 'yyyy-mm-dd hh24:mi:ss') >= R.toDateTime)))",
+              formatter.format(fromDateTime),
+              formatter.format(toDateTime),
+              formatter.format(fromDateTime),
+              formatter.format(toDateTime));
+    } else {
+      // show currently available vehicles if time period is not provided
+      query += " WHERE V.status = 'Available'";
     }
+
     if (location != null && city != null) {
-      query += String.format(" AND location = '%s' AND city = '%s'", location, city);
+      query += String.format(" AND V.location = '%s' AND V.city = '%s'", location, city);
     }
-    // TODO: what should we sort by?
-    query += " ORDER BY year desc";
+    // Actually don't know if I should do this
+    //    else {
+    //      // default branch
+    //      query += " AND V.location = '800 Robson St' AND V.city = 'Vancouver'";
+    //    }
+
+    if (vtname != null) {
+      query += String.format(" AND V.vtname = '%s'", vtname);
+    }
+
+    // TODO: todo add make and model?
+    query += " ORDER BY V.year desc";
 
     try {
       connection = DatabaseConnectionHandler.getConnection();

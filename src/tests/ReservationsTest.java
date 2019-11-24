@@ -3,9 +3,17 @@ package tests;
 import controller.ReservationsController;
 import model.Reservation;
 
+import java.sql.Timestamp;
+
 public class ReservationsTest {
   public static void test() {
-    Reservation r1 = new Reservation(-1, "Economy", "1234567", "1", "M", "1", "f");
+    Reservation r1 =
+        new Reservation(
+            -1,
+            "Economy",
+            "1982451",
+            Timestamp.valueOf("2019-01-18 13:30:00"),
+            Timestamp.valueOf("2019-01-28 13:30:00"));
 
     int i = ReservationsController.makeReservation(r1);
     Reservation rtest = ReservationsController.getReservation(i);
