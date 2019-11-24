@@ -11,9 +11,13 @@ public class Reservation {
     private final String pickUpDate;
     private final String dropOffTime;
     private final String dropOffDate;
+    private final String location;
+    private final String city;
 
-    public Reservation(int confNo, String vtname, String dlicense, String pickUpTime, String pickUpDate, String dropOffTime,
-                       String dropOffDate) {
+
+    public Reservation(int confNo, String vtname, String dlicense, String pickUpTime,
+                       String pickUpDate, String dropOffTime,
+                       String dropOffDate, String location, String city) {
         this.confNo = confNo;
         this.vtname = vtname;
         this.dlicense = dlicense;
@@ -21,6 +25,8 @@ public class Reservation {
         this.pickUpDate = pickUpDate;
         this.dropOffTime = dropOffTime;
         this.dropOffDate = dropOffDate;
+        this.location = location;
+        this.city = city;
     }
 
     public int getConfNo() {
@@ -53,6 +59,14 @@ public class Reservation {
 
     public void setConfNo(int confNo) {
         this.confNo = confNo;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     @Override

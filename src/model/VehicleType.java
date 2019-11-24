@@ -3,24 +3,24 @@ package model;
 public class VehicleType {
   private final String vtname;
   private final String features;
-  private final float wrate;
-  private final float drate;
-  private final float hrate;
-  private final float wirate;
-  private final float dirate;
-  private final float hirate;
-  private final float krate;
+  private final double wrate;
+  private final double drate;
+  private final double hrate;
+  private final double wirate;
+  private final double dirate;
+  private final double hirate;
+  private final double krate;
 
   public VehicleType(
       String vtname,
       String features,
-      float wrate,
-      float drate,
-      float hrate,
-      float wirate,
-      float dirate,
-      float hirate,
-      float krate) {
+      double wrate,
+      double drate,
+      double hrate,
+      double wirate,
+      double dirate,
+      double hirate,
+      double krate) {
     this.vtname = vtname;
     this.features = features;
     this.wrate = wrate;
@@ -40,31 +40,31 @@ public class VehicleType {
     return features;
   }
 
-  public float getWrate() {
+  public double getWrate() {
     return wrate;
   }
 
-  public float getDrate() {
+  public double getDrate() {
     return drate;
   }
 
-  public float getHrate() {
+  public double getHrate() {
     return hrate;
   }
 
-  public float getWirate() {
+  public double getWirate() {
     return wirate;
   }
 
-  public float getDirate() {
+  public double getDirate() {
     return dirate;
   }
 
-  public float getHirate() {
+  public double getHirate() {
     return hirate;
   }
 
-  public float getKrate() {
+  public double getKrate() {
     return krate;
   }
 

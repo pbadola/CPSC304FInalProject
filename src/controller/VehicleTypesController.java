@@ -19,13 +19,13 @@ public class VehicleTypesController {
             ps = connection.prepareStatement("INSERT INTO VehicleTypes VALUES (?,?,?,?,?,?,?,?,?)");
             ps.setString(1, vt.getVtname());
             ps.setString(2, vt.getFeatures());
-            ps.setFloat(3, vt.getWrate());
-            ps.setFloat(4, vt.getDrate());
-            ps.setFloat(5, vt.getHrate());
-            ps.setFloat(6, vt.getWirate());
-            ps.setFloat(7, vt.getDirate());
-            ps.setFloat(8, vt.getHirate());
-            ps.setFloat(9, vt.getKrate());
+            ps.setDouble(3, vt.getWrate());
+            ps.setDouble(4, vt.getDrate());
+            ps.setDouble(5, vt.getHrate());
+            ps.setDouble(6, vt.getWirate());
+            ps.setDouble(7, vt.getDirate());
+            ps.setDouble(8, vt.getHirate());
+            ps.setDouble(9, vt.getKrate());
 
 
             ps.executeUpdate();
@@ -52,7 +52,7 @@ public class VehicleTypesController {
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return;
-            ps = connection.prepareStatement("DELETE FROM VehicleTypes WHERE dlicense = ?");
+            ps = connection.prepareStatement("DELETE FROM VehicleTypes WHERE vtname = ?");
             ps.setString(1, vtname);
 
             int rowCount = ps.executeUpdate();
@@ -91,9 +91,9 @@ public class VehicleTypesController {
             rs = ps.executeQuery();
             while (rs.next()) {
                 retVehicleType = new VehicleType(rs.getString("vtname"), rs.getString("features"),
-                        rs.getFloat("wrate"), rs.getFloat("drate"), rs.getFloat("hrate"),
-                        rs.getFloat("wirate"), rs.getFloat("dirate"), rs.getFloat("hirate"),
-                        rs.getFloat("krate"));
+                        rs.getDouble("wrate"), rs.getDouble("drate"), rs.getDouble("hrate"),
+                        rs.getDouble("wirate"), rs.getDouble("dirate"), rs.getDouble("hirate"),
+                        rs.getDouble("krate"));
             }
         }
         catch(SQLException e) {

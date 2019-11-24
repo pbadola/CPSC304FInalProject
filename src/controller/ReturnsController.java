@@ -159,5 +159,7 @@ public class ReturnsController {
         return retReturn;
     }
 
-
+    public int calculateValue(){
+        return 0;
+    }
 }

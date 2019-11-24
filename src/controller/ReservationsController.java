@@ -21,7 +21,7 @@ public class ReservationsController {
             connection = DatabaseConnectionHandler.getConnection();
             System.out.println("after get connection");
             if (connection == null) return 0;
-            ps = connection.prepareStatement("INSERT INTO Reservations VALUES (?,?,?,?,?,?,?)");
+            ps = connection.prepareStatement("INSERT INTO Reservations VALUES (?,?,?,?,?,?,?,?,?)");
             System.out.println("after sql statement");
             System.out.println(reservation.getConfNo());
             ps.setInt(1, reservation.getConfNo());
@@ -31,6 +31,8 @@ public class ReservationsController {
             ps.setString(5, reservation.getPickUpTime());
             ps.setString(6, reservation.getDropOffDate());
             ps.setString(7, reservation.getDropOffTime());
+            ps.setString(8, reservation.getLocation());
+            ps.setString(9, reservation.getCity());
             System.out.println("after all values added");
 
             ps.executeUpdate();
@@ -103,9 +105,10 @@ public class ReservationsController {
             while (rs.next()) {
                 retReservation = new Reservation(rs.getInt("confNo"), rs.getString("vtname"),
                         rs.getString("dlicense"), rs.getString("fromDate"),
-                        rs.getString("fromTime"), rs.getString("toDate"), rs.getString("toTime"));
+                        rs.getString("fromTime"), rs.getString("toDate"),
+                        rs.getString("toTime"), rs.getString("location"),
+                        rs.getString("city"));
             }
-         //   System.out.println(retReservation.getConfNo());
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());

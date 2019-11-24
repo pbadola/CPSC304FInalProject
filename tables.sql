@@ -129,7 +129,13 @@ VALUES ('NL23NJ3', 'Volkswagen', 'Jetta', 2017, 'White', 00923, 'Available', 'St
 INSERT INTO Vehicles
 VALUES ('AOUN9S9', 'Land Rover', 'Discovery', 2015, 'Grey', 05283, 'Rented', 'SUV', '525 W Broadway', 'Vancouver');
 INSERT INTO Vehicles
-VALUES ('N8236A1', 'Ford', 'Fiesta', 2010, 'Blue', 34382, 'Maintenance', 'Compact', '10153 King George Blvd', 'Surrey');
+VALUES ('N8236A1', 'Ford', 'Fiesta', 2010, 'Blue', 34382, 'Rented', 'Compact', '10153 King George Blvd', 'Surrey');
+INSERT INTO Vehicles
+VALUES ('N2336A1', 'Ford', 'Fiesta', 2010, 'White', 3467, 'Available', 'Compact', '800 Robson St', 'Vancouver');
+INSERT INTO Vehicles
+VALUES ('NL6663', 'Volkswagen', 'Jetta', 2019, 'White', 00023, 'Available', 'Standard', '525 W Broadway', 'Vancouver');
+INSERT INTO Vehicles
+VALUES ('DOUN9S9', 'Land Rover', 'Discovery', 2017, 'Grey', 00283, 'Available', 'SUV','10153 King George Blvd', 'Surrey');
 
 INSERT INTO Reservations
 VALUES (8028940, 'Compact', '1982451', '2018-05-22', '08:00', '2018-05-24', '08:00');

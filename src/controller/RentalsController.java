@@ -2,15 +2,21 @@ package controller;
 
 import model.Rental;
 import database.DatabaseConnectionHandler;
+import model.Reservation;
+import model.Vehicle;
+import java.util.Random;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 public class RentalsController {
+    private static int rentCount = 1000;
+    private static Random rand;
 
     public static void addRental(Rental rental) {
         Connection connection;
         PreparedStatement ps = null;
-
+        rand = new Random();
         try {
             connection = DatabaseConnectionHandler.getConnection();
             if (connection == null) return;
@@ -126,13 +132,18 @@ public class RentalsController {
 
         //TODO: This query is incorrect. It does not do what is expected
         String query = "SELECT * ";
-        if (location != null && city != null){
-            query = query + "FROM Rentals R, Vehicles V "+
-                    "WHERE R.fromDate =  " + date + " AND R.vlicense = V.vlicence AND V.city = " + city +
-                    " AND V.location = " + location;
+        if (location == null && city == null){
+            query = query +
+                    "FROM Rentals R, Vehicles V "+
+                    "WHERE R.fromDate =  '" + date + "' AND V.status = 'Rented' AND R.vlicense = V.vlicense AND V.city = '" + city +
+                    "' AND V.location = '" + location +
+//                    " AND (SELECT * WHERE (SELECT * GROUP BY V.vtname))" +
+                    "' GROUP BY V.city, V.location, V.vtname";
+
         }
         else {
-            query = query + "FROM Rentals WHERE fromDate=" + date;
+            query = query + "FROM Rentals  R, Vehicles V WHERE fromDate='" + date + "' AND V.status = 'Rented' AND " +
+                    "V.vlicense = R.vlicense GROUP BY V.vtname";
         }
 
         try {
@@ -168,4 +179,46 @@ public class RentalsController {
 
         return retRental;
     }
+
+
+    public static Vehicle rentVehicle(int confNo, String cardName, int cardNo, String expDate){
+        Reservation reservation = ReservationsController.getReservation(confNo);
+        String vtname, location, city;
+        ArrayList<Vehicle> availableVehicles;
+        String fromDate, fromTime, toDate, toTime;
+        Vehicle rentedVehicle = null;
+
+        vtname = reservation.getVtname();
+        location = reservation.getLocation();
+        city = reservation.getCity();
+        fromDate = reservation.getPickUpDate();
+        fromTime = reservation.getPickUpTime();
+        toDate = reservation.getDropOffDate();
+        toTime = reservation.getDropOffTime();
+
+        availableVehicles = VehiclesController.getAvailableVehicles(vtname, location, city);
+        if (availableVehicles != null){
+            rentedVehicle = availableVehicles.get(0);
+            VehiclesController.changeStatus(rentedVehicle.getVlicense(), "Rented");
+            Rental rental = new Rental(
+                    rand.nextInt(9999999),
+                    rentedVehicle.getVlicense(),
+                    reservation.getDlicense(),
+                    fromDate,
+                    fromTime,
+                    toDate,
+                    toTime,
+                    rentedVehicle.getOdometer(),
+                    cardName,
+                    cardNo,
+                    expDate,
+                    confNo
+            );
+        }
+
+        return rentedVehicle;
+    }
+
+    
+
 }
