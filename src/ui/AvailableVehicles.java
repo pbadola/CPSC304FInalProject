@@ -1,11 +1,15 @@
 package ui;
 
+import controller.VehiclesController;
+import model.Vehicle;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 
 public class AvailableVehicles extends JFrame implements ActionListener {
@@ -20,24 +24,35 @@ public class AvailableVehicles extends JFrame implements ActionListener {
     private JTextField fromTimeField;
     private JTextField toDateField;
     private JTextField toTimeField;
+    private JTextField cityField;
+
+    private String carType;
+    private String location;
+    private String fromDate;
+    private String fromTime;
+    private String toDate;
+    private String toTime;
+    private String city;
+
     private JFrame frame;
     private JPanel contentPane;
     private GridBagLayout gb;
     private  GridBagConstraints c;
 
-    //private ArrayList<Vehicle> vehicles;
+    private ArrayList<Vehicle> vehicles = null;
 
 
-    public AvailableVehicles(JFrame frame){
+    AvailableVehicles(JFrame frame){
         super("Available Vehicle Menu");
         this.frame = frame;
     }
-    public void showMenu(){
+    void showMenu(){
         frame.getContentPane().removeAll();
         frame.repaint();
 
         JLabel carTypeLabel = new JLabel("Car type: ");
         JLabel locationLabel = new JLabel("Location: ");
+        JLabel cityLabel = new JLabel("City: ");
         JLabel fromDateLabel = new JLabel("Pickup Date: ");
         JLabel fromTimeLabel = new JLabel("Pickup Time: ");
         JLabel toDateLabel = new JLabel("Drop-off Date: ");
@@ -49,6 +64,7 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         fromTimeField = new JTextField(TEXT_FIELD_WIDTH);
         toDateField = new JTextField(TEXT_FIELD_WIDTH);
         toTimeField = new JTextField(TEXT_FIELD_WIDTH);
+        cityField = new JTextField(TEXT_FIELD_WIDTH);
 
         submitButton = new JButton("SUBMIT");
 
@@ -74,6 +90,7 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         gb.setConstraints(carTypeField, c);
         contentPane.add(carTypeField);
 
+
         // place the location label
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 0);
@@ -85,6 +102,18 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         c.insets = new Insets(10, 0, 5, 10);
         gb.setConstraints(locationField, c);
         contentPane.add(locationField);
+
+        // place the city label
+        c.gridwidth = GridBagConstraints.RELATIVE;
+        c.insets = new Insets(10, 10, 5, 0);
+        gb.setConstraints(cityLabel, c);
+        contentPane.add(cityLabel);
+
+        // place the text field for the location
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10, 0, 5, 10);
+        gb.setConstraints(cityField, c);
+        contentPane.add(cityField);
 
         // place the from date label
         c.gridwidth = GridBagConstraints.RELATIVE;
@@ -166,7 +195,16 @@ public class AvailableVehicles extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == submitButton){
+
+            carType = carTypeField.getText();
+            location = locationField.getText();
+            fromDate = fromDateField.getText();
+            fromTime = fromTimeField.getText();
+            toDate = toDateField.getText();
+            toTime = toTimeField.getText();
+            city = cityField.getText();
             showResultsCount();
+
         } else if(e.getSource() == menuButton){
            MainWindow mw = new MainWindow();
            mw.showFrame();
@@ -178,7 +216,21 @@ public class AvailableVehicles extends JFrame implements ActionListener {
     private void showResultsCount(){
         frame.getContentPane().removeAll();
         frame.repaint();
-        int count = 0; //TODO: This will get get the vehicle count and store the list of vehicles
+        System.out.println(carType);
+        if (carType.isBlank()){
+            carType = null;
+        }
+        if (location.isBlank()){
+            location = null;
+        }
+        if (city.isBlank()){
+            city = null;
+        }
+        vehicles = VehiclesController.getAvailableVehicles(carType, location, city);
+
+        //TODO: Reconsider whether the count query is what is needed. I think we should do the query
+        int count = 0; // vehicles.size();
+
         JLabel availableLabel = new JLabel("There are "+ count + " vehicles available.");
         viewButton = new JButton("VIEW AVAILABLE VEHICLES");
         menuButton = new JButton("MAIN MENU");
@@ -209,6 +261,36 @@ public class AvailableVehicles extends JFrame implements ActionListener {
     }
 
     private void showCompleteResults(){
-        System.out.println("List of vehicles will be printed here");
+        frame.getContentPane().removeAll();
+        frame.repaint();
+
+        JLabel headingLabel = new JLabel("**** AVAILABLE VEHICLES****");
+        JList<Vehicle> availableVehicles = null;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(5, 10, 10, 10);
+        c.anchor = GridBagConstraints.CENTER;
+        gb.setConstraints(headingLabel, c);
+        contentPane.add(headingLabel);
+
+        //Todo: Remember to remove this.. it is just for testing
+        Vehicle v = new Vehicle("uyhjh", "787uhu", "iuih8", 987, "hijij",
+                9899, "hjhjhj", "9kjj", "jihugy", "9ihuh");
+        vehicles = new ArrayList<>();
+        vehicles.add(v);
+        //Todo: Figure out how to output the vehicles
+       // if (vehicles != null)
+//           availableVehicles = new JList<Vehicle>((ListModel<Vehicle>) vehicles); // does not work
+     //   contentPane.add(availableVehicles);
+
+        System.out.println(vehicles);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(5, 10, 10, 10);
+        c.anchor = GridBagConstraints.CENTER;
+        contentPane.add(menuButton);
+        menuButton.addActionListener(this);
+
+        frame.pack();
+        frame.setVisible(true);
     }
 }
