@@ -2,6 +2,7 @@ package controller;
 
 import database.DatabaseConnectionHandler;
 import model.Rental;
+import model.RentalConfirmation;
 import model.Reservation;
 import model.Vehicle;
 
@@ -13,7 +14,7 @@ public class RentalsController {
   private static int rentCount = 1000;
   private static Random rand;
 
-  public static void addRental(Rental rental) {
+  private static void addRental(Rental rental) {
     Connection connection;
     PreparedStatement ps = null;
 
@@ -147,7 +148,7 @@ public class RentalsController {
     String query =
         String.format(
             "SELECT V.vtname, V.city, V.location FROM Rentals R, Vehicles V "
-                + "WHERE V.vlicense = R.vlicense AND R.fromDateTime = '%s'",
+                + "WHERE V.vlicense = R.vlicense AND TO_CHAR(TRUNC(R.fromDateTime)) = '%s'",
             date);
 
     System.out.println();
@@ -185,18 +186,33 @@ public class RentalsController {
 
         retRental.add(rental);
       }
-      if (rs != null) {
-        rs.close();
-      }
     } catch (SQLException e) {
+      System.out.println("error");
       System.out.println(e.getMessage());
+      DatabaseConnectionHandler.rollbackConnection();
+    } finally {
+      DatabaseConnectionHandler.close();
+      try {
+        if (ps != null) {
+          ps.close();
+        }
+        if (rs != null) {
+          rs.close();
+        }
+      } catch (SQLException e) {
+        System.out.println("error");
+        System.out.println(e.getMessage());
+      }
     }
 
     return retRental;
   }
 
-  public static Vehicle rentVehicle(
+  public static RentalConfirmation rentVehicle(
       Reservation reservation, String cardName, String cardNo, String expDate) {
+    RentalConfirmation confirmation = null;
+
+    rand = new Random();
     String vtname, location, city;
     ArrayList<Vehicle> availableVehicles;
     Timestamp fromDateTime, toDateTime;
@@ -239,8 +255,10 @@ public class RentalsController {
       } else {
         System.out.println("Vehicle has been rented");
       }
+
+      confirmation = new RentalConfirmation(rental.getRid(), rentedVehicle);
     }
 
-    return rentedVehicle;
+    return confirmation;
   }
 }

@@ -89,7 +89,7 @@ public class Rental {
             + "* toDateTime = %s\n"
             + "* odometer = %d\n"
             + "* cardName = %s\n"
-            + "* cardNo = %d\n"
+            + "* cardNo = %s\n"
             + "* expDate = %s\n"
             + "* confNo = %d",
         rid,
