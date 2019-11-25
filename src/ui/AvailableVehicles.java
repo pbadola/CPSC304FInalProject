@@ -26,6 +26,7 @@ public class AvailableVehicles extends JFrame implements ActionListener {
     private JTextField toTimeField;
     private JTextField cityField;
 
+
     private String carType;
     private String location;
     private String fromDate;
@@ -266,6 +267,7 @@ public class AvailableVehicles extends JFrame implements ActionListener {
 
         JLabel headingLabel = new JLabel("**** AVAILABLE VEHICLES****");
         JList<Vehicle> availableVehicles = null;
+
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;

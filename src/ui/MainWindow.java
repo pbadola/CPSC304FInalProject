@@ -28,7 +28,8 @@ public class MainWindow extends JFrame implements ActionListener {
 
 
     public void showFrame() {
-
+        getContentPane().removeAll();
+        repaint();
         available_vehicles = new JButton("View Available Vehicles");
         reservation = new JButton("Reserve a Vehicle");
         rent = new JButton("Rent a Vehicle");
@@ -106,6 +107,7 @@ public class MainWindow extends JFrame implements ActionListener {
             a.showMenu();
         }  else if (e.getSource() == reservation) {
             ReservationUI r = new ReservationUI(this);
+            r.showMenu();
         }  else if (e.getSource() == rent) {
             System.out.println("rent option was choses");
         }  else if (e.getSource() == vehicle_return) {

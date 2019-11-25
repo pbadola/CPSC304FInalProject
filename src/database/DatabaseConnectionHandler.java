@@ -13,7 +13,7 @@ public class DatabaseConnectionHandler {
 
   public static Connection getConnection() {
     try {
-      connection = DriverManager.getConnection(ORACLE_URL, "USER", "PASSWORD");
+      connection = DriverManager.getConnection(ORACLE_URL, "ora_wrigh63", "a10123248");
       connection.setAutoCommit(false);
       return connection;
     } catch (SQLException e) {
