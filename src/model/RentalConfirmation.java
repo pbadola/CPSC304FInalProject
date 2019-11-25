@@ -16,4 +16,9 @@ public class RentalConfirmation {
   public Vehicle getVehicle() {
     return vehicle;
   }
+
+  @Override
+  public String toString() {
+    return String.format("RentalConfirmation [rid=%s, vehicle=%s]", rid, vehicle);
+  }
 }
