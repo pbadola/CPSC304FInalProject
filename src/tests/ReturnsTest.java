@@ -5,12 +5,14 @@ import controller.ReturnsController;
 import model.Rental;
 import model.Return;
 
+import java.sql.Timestamp;
+
 public class ReturnsTest {
   public static void test() {
-    Return r1 = new Return(14445434, "2019-08-27", "09:00", 73464, 1, 0);
+    Return r1 = new Return(14445434, Timestamp.valueOf("2019-08-27 09:00"), 73464, 1, 0);
 
     Rental rt = RentalsController.getRental(r1.getRid());
-    String fromDate = rt.getFromDate();
+    Timestamp fromDate = rt.getFromDateTime();
 
     // TODO: When you figure out the date stuff, enter this
     System.out.println("Calculating the cost");
