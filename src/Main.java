@@ -17,10 +17,7 @@ public class Main extends MainWindow{
     // VehicleTypesTest.test();
     // VehicleTypesTest.test();
     //RentalsTest.test();
-    System.out.println("before mw");
     MainWindow mw = new MainWindow();
-    System.out.println("after mw");
     mw.showFrame();
-    System.out.println("after showframe");
   }
 }
