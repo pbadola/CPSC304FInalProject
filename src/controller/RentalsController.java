@@ -133,18 +133,17 @@ public class RentalsController {
         // NB: Group by statements require that whatever is in the SELECT clause must be in the GROUP BY.
         // Also, I am getting an invalid column name but I don't see what the problem is
 
-        String query = "" +
-                "SELECT V.vtname, V.city, V.location " +
-                "FROM Rentals R, Vehicles V " +
-                "WHERE V.vlicense = R.vlicense AND R.fromDate = '" + date + "'";
+        String query = String.format("SELECT V.vtname, V.city, V.location FROM Rentals R, Vehicles V " +
+                "WHERE V.vlicense = R.vlicense AND R.fromDate = '%s'", date );
+
+        System.out.println();
         if (location == null && city == null){
-            query = query +
-                    " GROUP BY V.location, V.city, V.vtname";
+            query += " GROUP BY V.location, V.city, V.vtname";
             System.out.println("The query is " + query);
 
         }
         else {
-            query = query + " AND V.city = '" + city + "' AND V.location = '" + location + "' " + "GROUP BY V.vtname";
+            query +=  String.format(" AND V.city = '%s' AND V.location = '%s' GROUP BY V.vtname" ,city , location) ;
         }
 
         try {
@@ -153,12 +152,15 @@ public class RentalsController {
             ps = connection.prepareStatement(query);
 
             rs = ps.executeQuery();
+            System.out.println(rs);
+
             while (rs.next()) {
                 rental = new Rental(rs.getInt("rid"), rs.getString("vlicense"),
                         rs.getString("dlicense"), rs.getString("fromDate"), rs.getString("fromTime"),
                         rs.getString("toDate"), rs.getString("toTime"), rs.getInt("odometer"),
                         rs.getString("cardName"), rs.getString("cardNo"), rs.getString("expDate"),
                         rs.getInt("confNo"));
+
                 retRental.add(rental);
             }
         }

@@ -121,11 +121,11 @@ public class ReturnsController {
         String query = "SELECT * ";
         if (location != null && city != null){
             query = query + "FROM Returns R, Rentals Re, Vehicles V "+
-                    "WHERE R.fromDate =  " + date + " AND R.vlicense = V.vlicence AND V.city = " + city +
-                    " AND R.rid = Re.rid AND V.location = " + location;
+                    "WHERE R.fromDate =  '" + date + "' AND R.vlicense = V.vlicence AND V.city = '" + city +
+                    "' AND R.rid = Re.rid AND V.location = '" + location;
         }
         else {
-            query = query + "FROM Returns WHERE rdate=" + date;
+            query = query + "FROM Returns WHERE rdate='" + date +"'";
         }
 
         try {
