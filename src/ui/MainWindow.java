@@ -1,17 +1,22 @@
 package ui;
-
+import controller.ReturnsController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 /**
  * This is the main menu of the program.
  */
 public class MainWindow extends JFrame implements ActionListener {
+    private static final String EXCEPTION_TAG = "[EXCEPTION]";
+    private static final String WARNING_TAG = "[WARNING]";
 
     private JButton available_vehicles;
     private JButton reservation;
@@ -21,6 +26,8 @@ public class MainWindow extends JFrame implements ActionListener {
     private JButton tables;
 
     private JPanel contentPane;
+    private BufferedReader bufferedReader = null;
+    int choice = -1;
 
     public MainWindow() {
         super("Main User Menu");
@@ -112,10 +119,35 @@ public class MainWindow extends JFrame implements ActionListener {
             RentVehicleUI rv = new RentVehicleUI(this);
             rv.showMenu();
         }  else if (e.getSource() == vehicle_return) {
-            System.out.println("return vehicle option was chosen");
+            System.out.println("Return vehicle option was chosen.");
+          //  returnVehicle();
         }  else if (e.getSource() == reports) {
             System.out.println("reports option was selected");
         } else
             System.out.println("table manipulation button was chosen");
     }
-}
+
+    private void returnVehicle() {
+        int tempRid = -1;
+        System.out.print("Please enter rid of vehicle you want to return: ");
+        tempRid = readInt();
+        if (tempRid != -1) {
+            ReturnsController.getReturn(tempRid);
+        }
+    }
+
+    private int readInt() {
+        String line = null;
+        int input = -1;
+        try {
+            line = bufferedReader.readLine();
+            input = Integer.parseInt(line);
+        } catch (IOException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println(WARNING_TAG + " Your input was not an integer");
+            }
+        return input;
+        }
+
+    }

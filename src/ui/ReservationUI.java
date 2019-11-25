@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import static java.lang.String.valueOf;
@@ -31,10 +32,8 @@ public class ReservationUI extends JFrame implements ActionListener  {
 
     private JTextField carTypeField;
     private JTextField locationField;
-    private JTextField fromDateField;
-    private JTextField fromTimeField;
-    private JTextField toDateField;
-    private JTextField toTimeField;
+    private JTextField fromDateTimeField;
+    private JTextField toDateTimeField;
     private JTextField cityField;
     private JTextField dlicenseField;
     private JTextField nameField;
@@ -44,16 +43,16 @@ public class ReservationUI extends JFrame implements ActionListener  {
 
     private String carType;
     private String location;
-    private String fromDate;
-    private String fromTime;
-    private String toDate;
-    private String toTime;
+    private String fromDateTime;
+    private String toDateTime;
     private String city;
     private String dlicense;
     private String name;
     private String address;
     private String phoneNum;
     private int confNo;
+    private Timestamp toTimestamp;
+    private Timestamp fromTimestamp;
 
 
     private JFrame frame;
@@ -76,19 +75,14 @@ public class ReservationUI extends JFrame implements ActionListener  {
         JLabel carTypeLabel = new JLabel("Car type: ");
         JLabel locationLabel = new JLabel("Location: ");
         JLabel cityLabel = new JLabel("City: ");
-        JLabel fromDateLabel = new JLabel("Pickup Date (required): ");
-        JLabel fromTimeLabel = new JLabel("Pickup Time (required): ");
-        JLabel toDateLabel = new JLabel("Drop-off Date (required): ");
-        JLabel toTimeLabel = new JLabel("Drop-off Time (required): ");
+        JLabel fromDateTimeLabel = new JLabel("Pickup Date and Time (required): ");
+        JLabel toDateTimeLabel = new JLabel("Drop-off Date and Time (required): ");
 
         carTypeField = new JTextField(TEXT_FIELD_WIDTH);
         locationField = new JTextField(TEXT_FIELD_WIDTH);
         cityField = new JTextField(TEXT_FIELD_WIDTH);
-        fromDateField = new JTextField(TEXT_FIELD_WIDTH);
-        fromTimeField = new JTextField(TEXT_FIELD_WIDTH);
-        toDateField = new JTextField(TEXT_FIELD_WIDTH);
-        toTimeField = new JTextField(TEXT_FIELD_WIDTH);
-
+        fromDateTimeField = new JTextField(TEXT_FIELD_WIDTH);
+        toDateTimeField = new JTextField(TEXT_FIELD_WIDTH);
         submitButton = new JButton("SUBMIT");
 
         contentPane = new JPanel();
@@ -137,57 +131,32 @@ public class ReservationUI extends JFrame implements ActionListener  {
         gb.setConstraints(cityField, c);
         contentPane.add(cityField);
 
-        // from date
+        // from date time
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 10);
         c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(fromDateLabel, c);
-        contentPane.add(fromDateLabel);
+        gb.setConstraints(fromDateTimeLabel, c);
+        contentPane.add(fromDateTimeLabel);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10, 0, 5, 10);
         c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(fromDateField, c);
-        contentPane.add(fromDateField);
+        gb.setConstraints(fromDateTimeField, c);
+        contentPane.add(fromDateTimeField);
 
-        // from time
+        // to date time
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 10);
         c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(fromTimeLabel, c);
-        contentPane.add(fromTimeLabel);
+        gb.setConstraints(toDateTimeLabel, c);
+        contentPane.add(toDateTimeLabel);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10, 0, 5, 10);
         c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(fromTimeField, c);
-        contentPane.add(fromTimeField);
+        gb.setConstraints(toDateTimeField, c);
+        contentPane.add(toDateTimeField);
 
-        // to date
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(toDateLabel, c);
-        contentPane.add(toDateLabel);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 0, 5, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(toDateField, c);
-        contentPane.add(toDateField);
-
-        // to time
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(toTimeLabel, c);
-        contentPane.add(toTimeLabel);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 0, 5, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(toTimeField, c);
-        contentPane.add(toTimeField);
 
         // submit button
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -229,12 +198,13 @@ public class ReservationUI extends JFrame implements ActionListener  {
         if(e.getSource() == submitButton) {
             carType = carTypeField.getText();
             location = locationField.getText();
-            fromDate = fromDateField.getText();
-            fromTime = fromTimeField.getText();
-            toDate = toDateField.getText();
-            toTime = toTimeField.getText();
+            fromDateTime = fromDateTimeField.getText();
+            toDateTime = toDateTimeField.getText();
             city = cityField.getText();
-            if(fromDate.isBlank() || fromTime.isBlank()|| toDate.isBlank()|| toTime.isBlank()){
+
+
+
+            if(fromDateTime.isBlank() || toDateTime.isBlank()){
                 missingRequiredInfo();
             } else {
                 showAvailableVehicles();
@@ -292,7 +262,11 @@ public class ReservationUI extends JFrame implements ActionListener  {
         if (city.isBlank()){
             city = null;
         }
-        availableVehicles = VehiclesController.getAvailableVehicles(carType, location, city);
+        // example: Timestamp.valueOf("2019-01-18 13:30:00");
+        fromTimestamp = Timestamp.valueOf(fromDateTime);
+        toTimestamp = Timestamp.valueOf(toDateTime);
+        availableVehicles = VehiclesController.getAvailableVehicles(carType, location, city,
+                fromTimestamp, toTimestamp);
         boolean setReserve = false;
 
         if (availableVehicles == null || availableVehicles.isEmpty()){
@@ -345,7 +319,7 @@ public class ReservationUI extends JFrame implements ActionListener  {
         carType = availableVehicles.get(0).getVtname();
 
         //TODO: Remember Reservation has city and location
-        res = new Reservation(1, carType, dlicense, fromDate, fromTime, toDate, toTime);
+        res = new Reservation(1, carType, dlicense, fromTimestamp, toTimestamp, location, city);
         //location and city
         confNo = ReservationsController.makeReservation(res);
         printDetails();
@@ -358,10 +332,8 @@ public class ReservationUI extends JFrame implements ActionListener  {
         String conf = valueOf(confNo);
         String s = "SUCCESS! Your confirmation number is " + conf +
                 "\nName: "+ name +
-                "\nDropoff Date: "+ fromDate +
-                "\nDropoff Time: "+ fromTime +
-                "\nPickup Date: "+ toDate +
-                "\nPickup Time: "+ toTime +
+                "\nDropoff Date and Time: "+ fromDateTime +
+                "\nPickup Date and Time: "+ toDateTime +
                 "\nCar Type: "+ carType;
 
         JTextArea textArea = new JTextArea(s);

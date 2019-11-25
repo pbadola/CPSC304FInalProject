@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
@@ -20,20 +21,18 @@ public class AvailableVehicles extends JFrame implements ActionListener {
 
     private JTextField carTypeField;
     private JTextField locationField;
-    private JTextField fromDateField;
-    private JTextField fromTimeField;
-    private JTextField toDateField;
-    private JTextField toTimeField;
+    private JTextField fromDateTimeField;
+    private JTextField toDateTimeField;
     private JTextField cityField;
 
 
     private String carType;
     private String location;
-    private String fromDate;
-    private String fromTime;
-    private String toDate;
-    private String toTime;
+    private String fromDateTime;
+    private String toDateTime;
     private String city;
+    private Timestamp fromTimestamp;
+    private Timestamp toTimestamp;
 
     private JFrame frame;
     private JPanel contentPane;
@@ -54,17 +53,13 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         JLabel carTypeLabel = new JLabel("Car type: ");
         JLabel locationLabel = new JLabel("Location: ");
         JLabel cityLabel = new JLabel("City: ");
-        JLabel fromDateLabel = new JLabel("Pickup Date: ");
-        JLabel fromTimeLabel = new JLabel("Pickup Time: ");
-        JLabel toDateLabel = new JLabel("Drop-off Date: ");
-        JLabel toTimeLabel = new JLabel("Drop-off Time: ");
+        JLabel fromDateTimeLabel = new JLabel("Pickup Date and Time: ");
+        JLabel toDateTimeLabel = new JLabel("Drop-off Date and Time: ");
 
         carTypeField = new JTextField(TEXT_FIELD_WIDTH);
         locationField = new JTextField(TEXT_FIELD_WIDTH);
-        fromDateField = new JTextField(TEXT_FIELD_WIDTH);
-        fromTimeField = new JTextField(TEXT_FIELD_WIDTH);
-        toDateField = new JTextField(TEXT_FIELD_WIDTH);
-        toTimeField = new JTextField(TEXT_FIELD_WIDTH);
+        fromDateTimeField = new JTextField(TEXT_FIELD_WIDTH);
+        toDateTimeField = new JTextField(TEXT_FIELD_WIDTH);
         cityField = new JTextField(TEXT_FIELD_WIDTH);
 
         submitButton = new JButton("SUBMIT");
@@ -116,50 +111,28 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         gb.setConstraints(cityField, c);
         contentPane.add(cityField);
 
-        // place the from date label
+        // place the from date and time label
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(fromDateLabel, c);
-        contentPane.add(fromDateLabel);
+        gb.setConstraints(fromDateTimeLabel, c);
+        contentPane.add(fromDateTimeLabel);
 
-        // place the text field for the from date
+        // place the text field for the from date and time
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10, 0, 5, 10);
-        gb.setConstraints(fromDateField, c);
-        contentPane.add(fromDateField);
-
-      //from time
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(fromTimeLabel, c);
-        contentPane.add(fromTimeLabel);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 0, 5, 10);
-        gb.setConstraints(fromTimeField, c);
-        contentPane.add(fromTimeField);
+        gb.setConstraints(fromDateTimeField, c);
+        contentPane.add(fromDateTimeField);
 
         //to date
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(toDateLabel, c);
-        contentPane.add(toDateLabel);
+        gb.setConstraints(toDateTimeLabel, c);
+        contentPane.add(toDateTimeLabel);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(10, 0, 5, 10);
-        gb.setConstraints(toDateField, c);
-        contentPane.add(toDateField);
-
-        // to time
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(toTimeLabel, c);
-        contentPane.add(toTimeLabel);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 0, 5, 10);
-        gb.setConstraints(toTimeField, c);
-        contentPane.add(toTimeField);
+        gb.setConstraints(toDateTimeField, c);
+        contentPane.add(toDateTimeField);
 
 
         //submit button
@@ -199,10 +172,8 @@ public class AvailableVehicles extends JFrame implements ActionListener {
 
             carType = carTypeField.getText();
             location = locationField.getText();
-            fromDate = fromDateField.getText();
-            fromTime = fromTimeField.getText();
-            toDate = toDateField.getText();
-            toTime = toTimeField.getText();
+            fromDateTime = fromDateTimeField.getText();
+            toDateTime = toDateTimeField.getText();
             city = cityField.getText();
             showResultsCount();
 
@@ -227,8 +198,16 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         if (city.isBlank()){
             city = null;
         }
-        vehicles = VehiclesController.getAvailableVehicles(carType, location, city);
-
+        if(!fromDateTime.isBlank() && !fromDateTime.isBlank()){
+            fromTimestamp = Timestamp.valueOf(fromDateTime);
+            toTimestamp = Timestamp.valueOf(toDateTime);
+        } else {
+            fromTimestamp = null;
+            toTimestamp = null;
+        }
+        System.out.println("Before getting the vehicles");
+        vehicles = VehiclesController.getAvailableVehicles(carType, location, city, toTimestamp, fromTimestamp);
+        System.out.println("After getting the vehicles");
         //TODO: Reconsider whether the count query is what is needed. I think we should do the query
         int count = vehicles.size();
 

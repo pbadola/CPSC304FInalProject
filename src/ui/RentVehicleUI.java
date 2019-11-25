@@ -3,6 +3,7 @@ package ui;
 
 import controller.RentalsController;
 import controller.ReservationsController;
+import controller.VehiclesController;
 import model.Rental;
 import model.Reservation;
 import model.Vehicle;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class RentVehicleUI extends JFrame implements ActionListener {
@@ -150,12 +152,14 @@ public class RentVehicleUI extends JFrame implements ActionListener {
             else {
                 ArrayList<Vehicle> availableVehicles = null;
                 String vtname = existingRes.getVtname();
-                // TODO: fix this back to using reservation
-                //     String location = existingRes.getLocation();
-                //     String city = existingRes.getCity();
-                //     availableVehicles = VehiclesController.getAvailableVehicles(vtname, location, city);
-                String city = "Vancouver";
-                String location = "525 W Broadway";
+                // TODO: fix this back to using reservation - DONE
+                String location = existingRes.getLocation();
+                String city = existingRes.getCity();
+                Timestamp fromDateTime = existingRes.getFromDateTime();
+                Timestamp toDateTime = existingRes.getToDateTime();
+                availableVehicles = VehiclesController.getAvailableVehicles(vtname, location, city, fromDateTime, toDateTime);
+                //String city = "Vancouver";
+                //String location = "525 W Broadway";
                 if (availableVehicles == null) {
                     JLabel novehicles = new JLabel("Sorry, no vehicles of this type available at this branch.");
                     System.out.println("if avaliable vehicles = null");
@@ -236,14 +240,10 @@ public class RentVehicleUI extends JFrame implements ActionListener {
                     dlicenseField.requestFocus();
 
                     String dlicense = existingRes.getDlicense();
-                    String fromDate = existingRes.getPickUpDate();
-                    String toDate = existingRes.getDropOffDate();
-                    String fromTime = existingRes.getPickUpTime();
-                    String toTime = existingRes.getDropOffTime();
                     String cardName_input = cardNameField.getText();
-                    // TODO: fix card no back to string later
-                    // String cardNo_input = cardNoField.getText();
-                    int cardNo_input = Integer.parseInt(cardNoField.getText());
+                    // TODO: fix card no back to string later -DONE
+                    String cardNo_input = cardNoField.getText();
+                    //int cardNo_input = Integer.parseInt(cardNoField.getText());
                     String expDate_input = expDateField.getText();
                     int confNo = existingRes.getConfNo();
                     Vehicle chosen = availableVehicles.get(0);
@@ -253,12 +253,11 @@ public class RentVehicleUI extends JFrame implements ActionListener {
 
 
                     // TODO: fix card no back to string later
-                    Rental model = new Rental(-1, vlicense, dlicense, fromDate, fromTime, toDate, toTime,
-                            odometer, cardName_input, cardNo_input, expDate_input, confNo);
-                    RentalsController.addRental(model);
+                    Reservation model = new Reservation(confNo, vtname, dlicense, fromDateTime, toDateTime, location, city);
+                    RentalsController.rentVehicle(model, cardName, cardNo, expDate);
                     System.out.println("before show receipt called");
-                    showReceipt(vlicense, dlicense, fromDate, toDate, fromTime, toTime, Integer.toString(odometer),
-                            cardName_input, Integer.toString(cardNo_input), expDate_input, Integer.toString(confNo));
+                    showReceipt(vlicense, dlicense, fromDateTime, toDateTime, Integer.toString(odometer),
+                            cardName_input, cardNo_input, expDate_input, Integer.toString(confNo));
 
                 }
 
@@ -270,8 +269,9 @@ public class RentVehicleUI extends JFrame implements ActionListener {
         }
     }
 
-    public void showReceipt(String vl, String dl, String fromDate, String toDate, String fromTime, String toTime,
-                            String odometer, String cardName, String cardNo, String expiry, String confirm) {
+    public void showReceipt(String vl, String dl, Timestamp from, Timestamp to,
+                            String odometer, String cardName, String cardNo,
+                            String expiry, String confirm) {
         System.out.println("show me the money");
         frame.getContentPane().removeAll();
         frame.repaint();
@@ -290,10 +290,8 @@ public class RentVehicleUI extends JFrame implements ActionListener {
 
         JLabel vlicenseLabel = new JLabel("Location: "+ vl);
         JLabel dlicenseLabel = new JLabel("Driver's License: "+ dl);
-        JLabel fromDateLabel = new JLabel("Pickup Date: "+ fromDate);
-        JLabel fromTimeLabel = new JLabel("Pickup Time: "+ fromTime);
-        JLabel toDateLabel = new JLabel("Drop-off Date: "+ toDate);
-        JLabel toTimeLabel = new JLabel("Drop-off Time: "+ toTime);
+        JLabel fromDateTimeLabel = new JLabel("Pickup Date: "+ from);
+        JLabel toDateTimeLabel = new JLabel("Pickup Time: "+ to);
         JLabel odometerLabel = new JLabel("Odometer reading: "+ odometer);
         JLabel cardNameLabel = new JLabel("Card Name: "+ cardName);
         JLabel cardNoLabel = new JLabel("Card Number: "+ cardNo);
@@ -321,31 +319,19 @@ public class RentVehicleUI extends JFrame implements ActionListener {
         contentPane.add(dlicenseLabel);
 
 
-        // from date
+        // from date time
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(fromDateLabel, c);
-        contentPane.add(fromDateLabel);
+        gb.setConstraints(fromDateTimeLabel, c);
+        contentPane.add(fromDateTimeLabel);
 
 
-        // from time
+
+        // to date time
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(fromTimeLabel, c);
-        contentPane.add(fromTimeLabel);
-
-        // to date
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(toDateLabel, c);
-        contentPane.add(toDateLabel);
-
-
-        // to time
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(toTimeLabel, c);
-        contentPane.add(toTimeLabel);
+        gb.setConstraints(toDateTimeLabel, c);
+        contentPane.add(toDateTimeLabel);
 
         // odometer
         c.gridwidth = GridBagConstraints.RELATIVE;
