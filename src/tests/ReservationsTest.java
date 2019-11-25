@@ -13,7 +13,9 @@ public class ReservationsTest {
             "Economy",
             "1982451",
             Timestamp.valueOf("2019-01-18 13:30:00"),
-            Timestamp.valueOf("2019-01-28 13:30:00"));
+            Timestamp.valueOf("2019-01-28 13:30:00"),
+            "la",
+            "lo");
 
     int i = ReservationsController.makeReservation(r1);
     Reservation rtest = ReservationsController.getReservation(i);

@@ -29,7 +29,7 @@ public class RentalsController {
       ps.setTimestamp(5, rental.getToDateTime());
       ps.setInt(6, rental.getOdometer());
       ps.setString(7, rental.getCardName());
-      ps.setInt(8, rental.getCardNo());
+      ps.setString(8, rental.getCardNo());
       ps.setString(9, rental.getExpDate());
       ps.setInt(10, rental.getConfNo());
 
@@ -108,7 +108,7 @@ public class RentalsController {
                 rs.getTimestamp("toDateTime"),
                 rs.getInt("odometer"),
                 rs.getString("cardName"),
-                rs.getInt("cardNo"),
+                rs.getString("cardNo"),
                 rs.getString("expDate"),
                 rs.getInt("confNo"));
       }
@@ -139,29 +139,26 @@ public class RentalsController {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    // TODO: This query is incorrect. It does not do what is expected
-    String query = "SELECT * ";
+    // TODO: Query doesn't work.
+    // NB: Group by statements require that whatever is in the SELECT clause must be in the GROUP
+    // BY.
+    // Also, I am getting an invalid column name but I don't see what the problem is
+
+    String query =
+        String.format(
+            "SELECT V.vtname, V.city, V.location FROM Rentals R, Vehicles V "
+                + "WHERE V.vlicense = R.vlicense AND R.fromDateTime = '%s'",
+            date);
+
+    System.out.println();
     if (location == null && city == null) {
-      query =
-          query
-              + "FROM Rentals R, Vehicles V "
-              + "WHERE R.fromDateTime =  '"
-              + date
-              + "' AND V.status = 'Rented' AND R.vlicense = V.vlicense AND V.city = '"
-              + city
-              + "' AND V.location = '"
-              + location
-              +
-              //                    " AND (SELECT * WHERE (SELECT * GROUP BY V.vtname))" +
-              "' GROUP BY V.city, V.location, V.vtname";
+      query += " GROUP BY V.location, V.city, V.vtname";
+      System.out.println("The query is " + query);
 
     } else {
-      query =
-          query
-              + "FROM Rentals  R, Vehicles V WHERE fromDateTime='"
-              + date
-              + "' AND V.status = 'Rented' AND "
-              + "V.vlicense = R.vlicense GROUP BY V.vtname";
+      query +=
+          String.format(
+              " AND V.city = '%s' AND V.location = '%s' GROUP BY V.vtname", city, location);
     }
 
     try {
@@ -170,6 +167,8 @@ public class RentalsController {
       ps = connection.prepareStatement(query);
 
       rs = ps.executeQuery();
+      System.out.println(rs);
+
       while (rs.next()) {
         rental =
             new Rental(
@@ -180,38 +179,30 @@ public class RentalsController {
                 rs.getTimestamp("toDateTime"),
                 rs.getInt("odometer"),
                 rs.getString("cardName"),
-                rs.getInt("cardNo"),
+                rs.getString("cardNo"),
                 rs.getString("expDate"),
                 rs.getInt("confNo"));
+
         retRental.add(rental);
+      }
+      if (rs != null) {
+        rs.close();
       }
     } catch (SQLException e) {
       System.out.println(e.getMessage());
-      DatabaseConnectionHandler.rollbackConnection();
-    } finally {
-      DatabaseConnectionHandler.close();
-      try {
-        if (ps != null) {
-          ps.close();
-        }
-        if (rs != null) {
-          rs.close();
-        }
-      } catch (SQLException e) {
-        System.out.println(e.getMessage());
-      }
     }
 
     return retRental;
   }
 
-  public static Vehicle rentVehicle(int confNo, String cardName, int cardNo, String expDate) {
-    Reservation reservation = ReservationsController.getReservation(confNo);
+  public static Vehicle rentVehicle(
+      Reservation reservation, String cardName, String cardNo, String expDate) {
     String vtname, location, city;
     ArrayList<Vehicle> availableVehicles;
     Timestamp fromDateTime, toDateTime;
     Vehicle rentedVehicle = null;
 
+    int confNo = reservation.getConfNo();
     vtname = reservation.getVtname();
     location = reservation.getLocation();
     city = reservation.getCity();
@@ -220,9 +211,8 @@ public class RentalsController {
 
     availableVehicles =
         VehiclesController.getAvailableVehicles(vtname, location, city, fromDateTime, toDateTime);
-    if (availableVehicles != null) {
+    if (availableVehicles != null && !availableVehicles.isEmpty()) {
       rentedVehicle = availableVehicles.get(0);
-      VehiclesController.changeStatus(rentedVehicle.getVlicense(), "Rented");
       Rental rental =
           new Rental(
               rand.nextInt(9999999),
@@ -235,6 +225,20 @@ public class RentalsController {
               cardNo,
               expDate,
               confNo);
+      addRental(rental);
+
+      // TODO: SHOULD THIS BE IN A TRY CATCH? HOW ARE WE HANDLING IF THIS IS AN ERROR?
+      VehiclesController.changeStatus(rentedVehicle.getVlicense(), "Rented");
+
+      Vehicle conf = VehiclesController.getVehicle(rentedVehicle.getVlicense());
+      String status = conf.getStatus();
+      if (status != "Rented") {
+        // TODO: DO WE KEEP CALLING CHANGESTATUS? OR DO WE DELETE THE
+        // ENTRY FROM RENTAL TABLE AND RETURN NULL SO THAT THEY START OVER THE PROCESS?
+
+      } else {
+        System.out.println("Vehicle has been rented");
+      }
     }
 
     return rentedVehicle;
