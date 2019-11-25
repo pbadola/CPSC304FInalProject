@@ -7,9 +7,9 @@ public class Return {
   private final Timestamp dateTime;
   private final int odometer;
   private final int fulltank;
-  private float value;
+  private double value;
 
-  public Return(int rid, Timestamp dateTime, int odometer, int fulltank, float value) {
+  public Return(int rid, Timestamp dateTime, int odometer, int fulltank, double value) {
     this.rid = rid;
     this.dateTime = dateTime;
     this.odometer = odometer;
@@ -33,8 +33,12 @@ public class Return {
     return fulltank;
   }
 
-  public float getValue() {
+  public double getValue() {
     return value;
+  }
+
+  public void setValue(double value) {
+    this.value = value;
   }
 
   @Override

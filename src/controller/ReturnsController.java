@@ -2,12 +2,14 @@ package controller;
 
 import database.DatabaseConnectionHandler;
 import model.Return;
+import model.VehicleType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 // import javafx.scene.control.CustomMenuItem;
 
@@ -24,7 +26,7 @@ public class ReturnsController {
       ps.setTimestamp(2, vReturn.getDateTime());
       ps.setInt(3, vReturn.getOdometer());
       ps.setInt(4, vReturn.isFulltank());
-      ps.setFloat(5, vReturn.getValue());
+      ps.setDouble(5, vReturn.getValue());
 
       ps.executeUpdate();
       connection.commit();
@@ -98,7 +100,7 @@ public class ReturnsController {
                 rs.getTimestamp("dateTime"),
                 rs.getInt("odometer"),
                 rs.getInt("fulltank"),
-                rs.getFloat("value"));
+                rs.getDouble("value"));
       }
     } catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -177,5 +179,24 @@ public class ReturnsController {
     }
 
     return retReturn;
+  }
+
+  public static int calculateValue(Date fromDate, Date toDate, String vtname) {
+    VehicleType vt = VehicleTypesController.getVehicleType(vtname);
+    double weeklyRate = vt.getWrate();
+    double dailyRate = vt.getDrate();
+    double hourlyRate = vt.getHrate();
+    double weeklyIns = vt.getWirate();
+    double dailyIns = vt.getDirate();
+    double hourlyIns = vt.getHirate();
+
+    // TODO: find out how Date and time are dealt with
+    // int totalTime = toDate.getTime() - fromDate.getTime();
+    // int weeks =
+    // int days =
+    // int hours =
+    // totalCost = (weeks * (weeklyRate + weeklyIns)) + (days * (dailyRate + dailyIns)) +  (hours *
+    // (hourlyRate + hourlyIns));
+    return 0;
   }
 }

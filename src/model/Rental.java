@@ -11,7 +11,7 @@ public class Rental {
   private final Timestamp toDateTime;
   private final int odometer;
   private final String cardName;
-  private final int cardNo;
+  private final String cardNo;
   private final String expDate;
   private final int confNo;
 
@@ -23,7 +23,7 @@ public class Rental {
       Timestamp toDateTime,
       int odometer,
       String cardName,
-      int cardNo,
+      String cardNo,
       String expDate,
       int confNo) {
     this.rid = rid;
@@ -58,7 +58,7 @@ public class Rental {
     return cardName;
   }
 
-  public int getCardNo() {
+  public String getCardNo() {
     return cardNo;
   }
 
@@ -89,7 +89,7 @@ public class Rental {
             + "* toDateTime = %s\n"
             + "* odometer = %d\n"
             + "* cardName = %s\n"
-            + "* cardNo = %d\n"
+            + "* cardNo = %s\n"
             + "* expDate = %s\n"
             + "* confNo = %d",
         rid,
