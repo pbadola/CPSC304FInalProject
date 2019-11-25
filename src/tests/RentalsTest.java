@@ -4,6 +4,7 @@ import controller.RentalsController;
 import controller.ReservationsController;
 import model.Rental;
 import model.RentalConfirmation;
+import model.RentalReportCount;
 import model.Reservation;
 
 import java.sql.Timestamp;
@@ -30,7 +31,7 @@ public class RentalsTest {
             -1,
             "Standard",
             "0000111",
-            Timestamp.valueOf("2017-06-11 16:10:00"),
+            Timestamp.valueOf("2019-06-11 16:10:00"),
             Timestamp.valueOf("2019-06-15 09:00:00"),
             "525 W Broadway",
             "Vancouver");
@@ -42,7 +43,8 @@ public class RentalsTest {
     System.out.println("Getting the rental added to the database");
     Rental check = RentalsController.getRental(rc1.getRid());
     System.out.println(check);
-    ArrayList<Rental> rentals = RentalsController.getDailyRental("2019-11-20", null, null);
+    ArrayList<RentalReportCount> rentals =
+        RentalsController.getDailyRentalCount("2019-11-20", null, null);
     if (rentals != null && rentals.isEmpty()) {
       System.out.println("list is empty");
     }

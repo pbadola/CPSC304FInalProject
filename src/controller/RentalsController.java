@@ -1,10 +1,7 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
-import model.Rental;
-import model.RentalConfirmation;
-import model.Reservation;
-import model.Vehicle;
+import model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -133,34 +130,25 @@ public class RentalsController {
     return retRental;
   }
 
-  public static ArrayList<Rental> getDailyRental(String date, String location, String city) {
+  public static ArrayList<RentalReportCount> getDailyRentalCount(
+      String date, String location, String city) {
     Connection connection;
-    ArrayList<Rental> retRental = new ArrayList<Rental>();
-    Rental rental = null;
+    ArrayList<RentalReportCount> counts = new ArrayList<RentalReportCount>();
+    RentalReportCount count = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    // TODO: Query doesn't work.
-    // NB: Group by statements require that whatever is in the SELECT clause must be in the GROUP
-    // BY.
-    // Also, I am getting an invalid column name but I don't see what the problem is
-
     String query =
         String.format(
-            "SELECT V.vtname, V.city, V.location FROM Rentals R, Vehicles V "
-                + "WHERE V.vlicense = R.vlicense AND TO_CHAR(TRUNC(R.fromDateTime)) = '%s'",
+            "SELECT V.city, V.location, V.vtname, COUNT(*) as count FROM Rentals R, Vehicles V "
+                + "WHERE V.vlicense = R.vlicense AND TO_CHAR(TRUNC(R.fromDateTime), 'yyyy-mm-dd') = '%s'",
             date);
 
-    System.out.println();
-    if (location == null && city == null) {
-      query += " GROUP BY V.location, V.city, V.vtname";
-      System.out.println("The query is " + query);
-
-    } else {
-      query +=
-          String.format(
-              " AND V.city = '%s' AND V.location = '%s' GROUP BY V.vtname", city, location);
+    if (location != null && city != null) {
+      query += String.format(" AND V.city = '%s' AND V.location = '%s'", city, location);
     }
+
+    query += " GROUP BY V.location, V.city, V.vtname ORDER BY V.location, V.city, V.vtname";
 
     try {
       connection = DatabaseConnectionHandler.getConnection();
@@ -171,20 +159,13 @@ public class RentalsController {
       System.out.println(rs);
 
       while (rs.next()) {
-        rental =
-            new Rental(
-                rs.getInt("rid"),
-                rs.getString("vlicense"),
-                rs.getString("dlicense"),
-                rs.getTimestamp("fromDateTime"),
-                rs.getTimestamp("toDateTime"),
-                rs.getInt("odometer"),
-                rs.getString("cardName"),
-                rs.getString("cardNo"),
-                rs.getString("expDate"),
-                rs.getInt("confNo"));
-
-        retRental.add(rental);
+        count =
+            new RentalReportCount(
+                rs.getString("city"),
+                rs.getString("location"),
+                rs.getString("vtname"),
+                rs.getInt("count"));
+        counts.add(count);
       }
     } catch (SQLException e) {
       System.out.println("error");
@@ -205,7 +186,72 @@ public class RentalsController {
       }
     }
 
-    return retRental;
+    return counts;
+  }
+
+  public static ArrayList<Vehicle> getDailyRentalInfo(String date, String location, String city) {
+    Connection connection;
+    ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    String query =
+        String.format(
+            "SELECT V.* "
+                + "FROM Rentals R, Vehicles V "
+                + "WHERE V.vlicense = R.vlicense "
+                + "AND TO_CHAR(TRUNC(R.fromDateTime), 'yyyy-mm-dd') = '%s'",
+            date);
+
+    if (location != null && city != null) {
+      query += String.format(" AND V.city = '%s' AND V.location = '%s'", city, location);
+    }
+
+    query += " ORDER BY V.location, V.city, V.vtname";
+
+    try {
+      connection = DatabaseConnectionHandler.getConnection();
+      if (connection == null) return null;
+      ps = connection.prepareStatement(query);
+
+      rs = ps.executeQuery();
+      System.out.println(rs);
+
+      while (rs.next()) {
+        Vehicle v =
+            new Vehicle(
+                rs.getString("vlicense"),
+                rs.getString("make"),
+                rs.getString("model"),
+                rs.getInt("year"),
+                rs.getString("color"),
+                rs.getInt("odometer"),
+                rs.getString("status"),
+                rs.getString("vtname"),
+                rs.getString("location"),
+                rs.getString("city"));
+        vehicles.add(v);
+      }
+    } catch (SQLException e) {
+      System.out.println("error");
+      System.out.println(e.getMessage());
+      DatabaseConnectionHandler.rollbackConnection();
+    } finally {
+      DatabaseConnectionHandler.close();
+      try {
+        if (ps != null) {
+          ps.close();
+        }
+        if (rs != null) {
+          rs.close();
+        }
+      } catch (SQLException e) {
+        System.out.println("error");
+        System.out.println(e.getMessage());
+      }
+    }
+
+    return vehicles;
   }
 
   public static RentalConfirmation rentVehicle(
