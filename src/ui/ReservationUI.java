@@ -259,6 +259,7 @@ public class ReservationUI extends JFrame implements ActionListener  {
                 missingRequiredInfo();
             } else {
                 customer = handleCustomerInfo();
+                completeReservation();
             }
         }
     }
@@ -333,9 +334,14 @@ public class ReservationUI extends JFrame implements ActionListener  {
 
     private void makeReservation(){
         customer = CustomersController.getCustomer(dlicense);
-        if (customer == null){
-           getCustomerInfo();
+        if (customer == null) {
+            getCustomerInfo();
         }
+
+    }
+
+    private void completeReservation(){
+        System.out.println("completer callerd");
         carType = availableVehicles.get(0).getVtname();
 
         //TODO: Remember Reservation has city and location
@@ -343,7 +349,6 @@ public class ReservationUI extends JFrame implements ActionListener  {
         //location and city
         confNo = ReservationsController.makeReservation(res);
         printDetails();
-
     }
 
     private void printDetails(){
@@ -351,69 +356,22 @@ public class ReservationUI extends JFrame implements ActionListener  {
         frame.repaint();
 
         String conf = valueOf(confNo);
+        String s = "SUCCESS! Your confirmation number is " + conf +
+                "\nName: "+ name +
+                "\nDropoff Date: "+ fromDate +
+                "\nDropoff Time: "+ fromTime +
+                "\nPickup Date: "+ toDate +
+                "\nPickup Time: "+ toTime +
+                "\nCar Type: "+ carType;
 
-        JLabel confirmationLabel = new JLabel("SUCCESS! Your confirmation number is "+ conf);
-        JLabel nameLabel = new JLabel("Name: " + name);
-        JLabel fromDateLabel = new JLabel("Pickup Date: " + fromDate);
-        JLabel fromTimeLabel = new JLabel("Pickup Time: " + fromTime);
-        JLabel toDateLabel = new JLabel("Dropoff Date: " + toDate);
-        JLabel toTimeLabel = new JLabel("Dropoff Time: " + toTime);
-        JLabel locationLabel = new JLabel("Locatoin: " + location);
-        JLabel cityLabel = new JLabel("City: " + city);
-        JLabel cartypeLabel = new JLabel("Car type: "+ carType);
-
-
+        JTextArea textArea = new JTextArea(s);
         cancelButton = new JButton("OK");
 
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(confirmationLabel, c);
-        contentPane.add(confirmationLabel);
+        gb.setConstraints(textArea, c);
+        contentPane.add(textArea);
 
-//        c.gridwidth = GridBagConstraints.RELATIVE;
-//        c.insets = new Insets(10, 10, 5, 0);
-//        gb.setConstraints(nameLabel, c);
-//        contentPane.add(nameLabel);
-
-//        c.gridwidth = GridBagConstraints.RELATIVE;
-//        c.insets = new Insets(10, 10, 5, 0);
-//        gb.setConstraints(cartypeLabel, c);
-//        contentPane.add(cartypeLabel);
-//
-//        c.gridwidth = GridBagConstraints.RELATIVE;
-//        c.insets = new Insets(10, 10, 5, 0);
-//        gb.setConstraints(fromDateLabel, c);
-//        contentPane.add(fromDateLabel);
-//
-//        c.gridwidth = GridBagConstraints.RELATIVE;
-//        c.insets = new Insets(10, 10, 5, 0);
-//        gb.setConstraints(fromTimeLabel, c);
-//        contentPane.add(fromTimeLabel);
-//
-//        c.gridwidth = GridBagConstraints.RELATIVE;
-//        c.insets = new Insets(10, 10, 5, 0);
-//        gb.setConstraints(toDateLabel, c);
-//        contentPane.add(toDateLabel);
-//
-//        c.gridwidth = GridBagConstraints.RELATIVE;
-//        c.insets = new Insets(10, 10, 5, 0);
-//        gb.setConstraints(toTimeLabel, c);
-//        contentPane.add(toTimeLabel);
-//
-//        if (location != null){
-//            c.gridwidth = GridBagConstraints.RELATIVE;
-//            c.insets = new Insets(10, 10, 5, 0);
-//            gb.setConstraints(locationLabel, c);
-//            contentPane.add(locationLabel);
-//        }
-//
-//        if(city != null){
-//            c.gridwidth = GridBagConstraints.RELATIVE;
-//            c.insets = new Insets(10, 10, 5, 0);
-//            gb.setConstraints(cityLabel, c);
-//            contentPane.add(cityLabel);
-//        }
-//
         //cancel button
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
@@ -422,12 +380,13 @@ public class ReservationUI extends JFrame implements ActionListener  {
         contentPane.add(cancelButton);
 
         cancelButton.addActionListener(this);
-
+        frame.setSize(100,100);
         frame.pack();
         frame.setVisible(true);
     }
 
     private Customer handleCustomerInfo(){
+        System.out.println("Handle customer is called");
         int phone = Integer.parseInt(phoneNum);
         Customer c = new Customer(phone, name,address,dlicense);
         CustomersController.addCustomer(c);
@@ -482,6 +441,7 @@ public class ReservationUI extends JFrame implements ActionListener  {
     }
 
     private void getCustomerInfo(){
+        System.out.println("get customer info called");
         frame.getContentPane().removeAll();
         frame.repaint();
 
@@ -522,7 +482,7 @@ public class ReservationUI extends JFrame implements ActionListener  {
         gb.setConstraints(submitInfoButton, c);
         contentPane.add(submitInfoButton);
 
-        submitCustButton.addActionListener(this);
+        submitInfoButton.addActionListener(this);
 
         frame.pack();
         nameField.requestFocus();

@@ -230,7 +230,7 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         vehicles = VehiclesController.getAvailableVehicles(carType, location, city);
 
         //TODO: Reconsider whether the count query is what is needed. I think we should do the query
-        int count = 0; // vehicles.size();
+        int count = vehicles.size();
 
         JLabel availableLabel = new JLabel("There are "+ count + " vehicles available.");
         viewButton = new JButton("VIEW AVAILABLE VEHICLES");
@@ -274,22 +274,26 @@ public class AvailableVehicles extends JFrame implements ActionListener {
         gb.setConstraints(headingLabel, c);
         contentPane.add(headingLabel);
 
-        //Todo: Remember to remove this.. it is just for testing
-        Vehicle v = new Vehicle("uyhjh", "787uhu", "iuih8", 987, "hijij",
-                9899, "hjhjhj", "9kjj", "jihugy", "9ihuh");
-        vehicles = new ArrayList<>();
-        vehicles.add(v);
-        //Todo: Figure out how to output the vehicles
-       // if (vehicles != null)
-//           availableVehicles = new JList<Vehicle>((ListModel<Vehicle>) vehicles); // does not work
-     //   contentPane.add(availableVehicles);
 
-        System.out.println(vehicles);
+        String vehicleString = "";
+        for(Vehicle vehicle: vehicles){
+            vehicleString += vehicle.toString()+"\n\n";
+        }
+
+        JTextArea textArea = new JTextArea(vehicleString);
+
+        //c.gridwidth = GridBagConstraints.RELATIVE;
+        c.insets = new Insets(10, 10, 5, 0);
+        gb.setConstraints(textArea, c);
+        contentPane.add(textArea);
+
+        contentPane.add(Box.createHorizontalStrut(10));
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
         contentPane.add(menuButton);
+
         menuButton.addActionListener(this);
 
         frame.pack();
