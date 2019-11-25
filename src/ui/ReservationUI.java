@@ -370,50 +370,50 @@ public class ReservationUI extends JFrame implements ActionListener  {
         gb.setConstraints(confirmationLabel, c);
         contentPane.add(confirmationLabel);
 
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(nameLabel, c);
-        contentPane.add(nameLabel);
+//        c.gridwidth = GridBagConstraints.RELATIVE;
+//        c.insets = new Insets(10, 10, 5, 0);
+//        gb.setConstraints(nameLabel, c);
+//        contentPane.add(nameLabel);
 
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(cartypeLabel, c);
-        contentPane.add(cartypeLabel);
-
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(fromDateLabel, c);
-        contentPane.add(fromDateLabel);
-
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(fromTimeLabel, c);
-        contentPane.add(fromTimeLabel);
-
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(toDateLabel, c);
-        contentPane.add(toDateLabel);
-
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(toTimeLabel, c);
-        contentPane.add(toTimeLabel);
-
-        if (location != null){
-            c.gridwidth = GridBagConstraints.RELATIVE;
-            c.insets = new Insets(10, 10, 5, 0);
-            gb.setConstraints(locationLabel, c);
-            contentPane.add(locationLabel);
-        }
-
-        if(city != null){
-            c.gridwidth = GridBagConstraints.RELATIVE;
-            c.insets = new Insets(10, 10, 5, 0);
-            gb.setConstraints(cityLabel, c);
-            contentPane.add(cityLabel);
-        }
-
+//        c.gridwidth = GridBagConstraints.RELATIVE;
+//        c.insets = new Insets(10, 10, 5, 0);
+//        gb.setConstraints(cartypeLabel, c);
+//        contentPane.add(cartypeLabel);
+//
+//        c.gridwidth = GridBagConstraints.RELATIVE;
+//        c.insets = new Insets(10, 10, 5, 0);
+//        gb.setConstraints(fromDateLabel, c);
+//        contentPane.add(fromDateLabel);
+//
+//        c.gridwidth = GridBagConstraints.RELATIVE;
+//        c.insets = new Insets(10, 10, 5, 0);
+//        gb.setConstraints(fromTimeLabel, c);
+//        contentPane.add(fromTimeLabel);
+//
+//        c.gridwidth = GridBagConstraints.RELATIVE;
+//        c.insets = new Insets(10, 10, 5, 0);
+//        gb.setConstraints(toDateLabel, c);
+//        contentPane.add(toDateLabel);
+//
+//        c.gridwidth = GridBagConstraints.RELATIVE;
+//        c.insets = new Insets(10, 10, 5, 0);
+//        gb.setConstraints(toTimeLabel, c);
+//        contentPane.add(toTimeLabel);
+//
+//        if (location != null){
+//            c.gridwidth = GridBagConstraints.RELATIVE;
+//            c.insets = new Insets(10, 10, 5, 0);
+//            gb.setConstraints(locationLabel, c);
+//            contentPane.add(locationLabel);
+//        }
+//
+//        if(city != null){
+//            c.gridwidth = GridBagConstraints.RELATIVE;
+//            c.insets = new Insets(10, 10, 5, 0);
+//            gb.setConstraints(cityLabel, c);
+//            contentPane.add(cityLabel);
+//        }
+//
         //cancel button
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
@@ -423,9 +423,7 @@ public class ReservationUI extends JFrame implements ActionListener  {
 
         cancelButton.addActionListener(this);
 
-
         frame.pack();
-        nameField.requestFocus();
         frame.setVisible(true);
     }
 
